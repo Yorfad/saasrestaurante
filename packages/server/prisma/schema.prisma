@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Mesa {
+  id       Int        @id @default(autoincrement())
+  numero   Int        @unique
+  nombre   String?
+  estado   String     @default("LIBRE") // LIBRE | OCUPADA | CUENTA
+  pedidos  Pedido[]
+}
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String
+  orden     Int        @default(0)
+  productos Producto[]
+}
+
+model Producto {
+  id          Int          @id @default(autoincrement())
+  nombre      String
+  descripcion String?
+  precio      Float
+  disponible  Boolean      @default(true)
+  categoriaId Int
+  categoria   Categoria    @relation(fields: [categoriaId], references: [id])
+  items       PedidoItem[]
+}
+
+model Pedido {
+  id        Int          @id @default(autoincrement())
+  mesaId    Int
+  mesa      Mesa         @relation(fields: [mesaId], references: [id])
+  estado    String       @default("PENDIENTE") // PENDIENTE | EN_COCINA | LISTO | CERRADO
+  notas     String?
+  total     Float        @default(0)
+  items     PedidoItem[]
+  creadoEn  DateTime     @default(now())
+  cerradoEn DateTime?
+}
+
+model PedidoItem {
+  id         Int      @id @default(autoincrement())
+  pedidoId   Int
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  productoId Int
+  producto   Producto @relation(fields: [productoId], references: [id])
+  cantidad   Int
+  precio     Float
+  notas      String?
+}

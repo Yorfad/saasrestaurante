@@ -1,0 +1,19 @@
+{
+  "name": "restaurante",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w @restaurante/server\" \"npm run dev -w @restaurante/web\"",
+    "build": "npm run build -w @restaurante/server && npm run build -w @restaurante/web",
+    "server": "npm run dev -w @restaurante/server",
+    "web": "npm run dev -w @restaurante/web",
+    "db:push": "npm run db:push -w @restaurante/server",
+    "db:seed": "npm run db:seed -w @restaurante/server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
