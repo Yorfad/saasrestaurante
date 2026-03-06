@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-export const api = axios.create({
-  baseURL: '/api',
-})
+// En desarrollo: Vite proxy maneja /api → localhost:3001
+// En producción (Vercel): apunta directo a Railway
+const BASE_URL = import.meta.env.VITE_API_URL ?? '/api'
+
+export const api = axios.create({ baseURL: BASE_URL })
 
 // Tipos
 export interface Mesa {
