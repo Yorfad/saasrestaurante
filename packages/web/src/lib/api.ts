@@ -53,16 +53,19 @@ export interface Pedido {
 }
 
 // API calls
-export const getMesas = () => api.get<Mesa[]>('/mesas').then((r) => r.data)
+const toArray = <T>(data: unknown): T[] => (Array.isArray(data) ? data : [])
+
+export const getMesas = () => api.get<Mesa[]>('/mesas').then((r) => toArray<Mesa>(r.data))
 export const updateEstadoMesa = (id: number, estado: Mesa['estado']) =>
   api.patch<Mesa>(`/mesas/${id}/estado`, { estado }).then((r) => r.data)
 
-export const getProductos = () => api.get<Categoria[]>('/productos').then((r) => r.data)
+export const getProductos = () =>
+  api.get<Categoria[]>('/productos').then((r) => toArray<Categoria>(r.data))
 
 export const getPedidos = (estado?: string) =>
   api
     .get<Pedido[]>('/pedidos', { params: estado ? { estado } : undefined })
-    .then((r) => r.data)
+    .then((r) => toArray<Pedido>(r.data))
 
 export const crearPedido = (data: {
   mesaId: number
